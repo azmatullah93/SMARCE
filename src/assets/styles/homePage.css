@@ -1,0 +1,14 @@
+.chooseUsSection {
+    border: 2px solid rgb(227, 143, 224);
+
+/* border-image-source: linear-gradient(272.52deg, #AB2FFE -1.68%, #40AFFD 98.81%); */
+
+background: linear-gradient(380.11deg, rgba(193, 127, 189, 0.51) -14.05%, rgba(255, 86, 246, 0) 62.89%);
+
+}
+
+.home {
+    background: linear-gradient(197.11deg, rgba(193, 127, 189, 0.51) -14.05%, rgba(255, 86, 246, 0) 62.89%);
+
+
+}
