@@ -170,7 +170,7 @@ const ManufacturerDashboard = () => {
             </button>
           </div>
           {showForm && (
-            <div className='w-1/2 mx-auto ml-25% bg-gray-100 absolute'>
+            <div className='w-1/2 mx-auto ml-25% bg-gray-100 absolute rounded-lg'>
               <form onSubmit={handleAdd}>
                 <div className='mb-5'>
                   <label
@@ -248,9 +248,9 @@ const ManufacturerDashboard = () => {
                   />
                 </div>
 
-                <div className=''>
+                <div className='mx-auto'>
                   <button
-                    className='bg-pink-400 p-4 rounded-lg mb-4 ml-500'
+                    className='bg-pink-400 p-4 rounded-lg mb-4 hover:bg-pink-500'
                     type='button'
                     onClick={handleGenerateQr}
                   >
@@ -262,7 +262,7 @@ const ManufacturerDashboard = () => {
                 <div className='btn'>
                   <button
                     type='submit'
-                    className='bg-pink-400 mb-4 text-white w-full py-4 rounded-lg hover:bg-pink-500'
+                    className='bg-pink-400 text-white w-full py-4 rounded-lg hover:bg-pink-500'
                   >
                     Add
                   </button>
@@ -272,7 +272,8 @@ const ManufacturerDashboard = () => {
           )}
         </div>
 
-        <div className=' grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 p-10'>
+        {/* <div className=' grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 p-10'> */}
+        <div className=' flex gap-5 p-10'>
           {products.map(product => {
             return (
               <div
@@ -283,7 +284,9 @@ const ManufacturerDashboard = () => {
                   <h3 className='text-lg font-semibold'>{`ID: ${product.productId}`}</h3>
                   <h3 className='text-lg font-semibold'>{`qrCode: ${product.qrCode}`}</h3>
                   <p className='text-gray-600'>{`Quantity: ${product.quantity}`}</p>
-                  <p className='text-gray-600'>{`URL: ${product.imageUrl}`}</p>
+                  {/* <p className='text-gray-600'>{`URL: ${product.imageUrl}`}</p> */}
+                  <img src={product.imageUrl} alt="Product" className="w-full mt-2 h-auto" />
+
                 </div>
               </div>
             )

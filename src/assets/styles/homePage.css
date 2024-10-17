@@ -12,3 +12,10 @@ background: linear-gradient(380.11deg, rgba(193, 127, 189, 0.51) -14.05%, rgba(2
 
 
 }
+
+@media screen and (max-width: 1040px) {
+    .chooseUsSection {
+        display: none;
+    }
+  
+}

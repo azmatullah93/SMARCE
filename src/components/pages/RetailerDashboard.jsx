@@ -117,7 +117,7 @@ const RetailerDashboard = () => {
               onClick={toggleForm}
               className='bg-pink-400 px-12 mb-4 mt-2 ml- text-white py-4 rounded-md hover:bg-pink-500'
             >
-              {showForm ? 'Cancel' : 'Add Product'}
+              {showForm ? 'Cancel' : 'Sell Product'}
             </button>
           </div>
           {showForm && (
@@ -193,7 +193,8 @@ const RetailerDashboard = () => {
           )}
         </div>
 
-        <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 p-10'>
+        {/* <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 p-10'> */}
+        <div className='flex gap-5 p-10'>
           {products.map(product => (
             <div
               key={product.id}

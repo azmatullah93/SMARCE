@@ -8,7 +8,7 @@ const Navbar = () => {
   const [isConnected, setIsConnected] = useState(false)
   const [account, setAccount] = useState(null)
   const [ownerID, setOwnerID] = useState(null)
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(false)
 
   const ConnectWallet = async () => {
     console.log('ConnectWallet in Navbar called')
@@ -49,13 +49,13 @@ const Navbar = () => {
 
   return (
     <div>
-      <nav className='bg-pink-200 flex justify-between align-middle'>
+      <nav className='navbar bg-pink-200 flex justify-between align-middle'>
         <h1 className='font-bold text-lg flex align-middle pl-3 pt-3'>
           <Link to='/'>
             <button>SMARCE</button>
           </Link>
         </h1>
-        <div className='flex list-none gap-5'>
+        <div className='listing flex list-none gap-5'>
           {/* <li>
             <Link to='/ProductList'>
               <Button text='Products' />
