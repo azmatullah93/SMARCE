@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import SmartContractService from '../../contracts/smartContract' // Import SmartContractService
 import Navbar from '../common/Navbar'
@@ -7,7 +7,13 @@ import 'react-toastify/dist/ReactToastify.css'
 import Footer from './Footer'
 const RetailerDashboard = () => {
   const [showForm, setShowForm] = useState(false)
-  const [products, setProducts] = useState([])
+
+  // Initialize state from localStorage if products exist
+  const [products, setProducts] = useState(() => {
+    const savedProducts = localStorage.getItem('distributerProducts')
+    return savedProducts ? JSON.parse(savedProducts) : []
+  })
+
   const [product, setProduct] = useState({
     productId: '',
     customer: '',
@@ -18,9 +24,21 @@ const RetailerDashboard = () => {
     setShowForm(!showForm)
   }
 
+  // const addProduct = newProduct => {
+  //   setProducts([...products, newProduct])
+  //   console.log(products)
+  // }
+
+  // Sync products to localStorage whenever they are updated
+  useEffect(() => {
+    localStorage.setItem('distributerProducts', JSON.stringify(products))
+  }, [products])
+
+  // Function to add a product locally
   const addProduct = newProduct => {
-    setProducts([...products, newProduct])
-    console.log(products)
+    const updatedProducts = [...products, newProduct]
+    setProducts(updatedProducts) // This will trigger the useEffect to update localStorage
+    console.log('Products after adding: ', updatedProducts)
   }
 
   const handleChange = e => {
@@ -49,6 +67,21 @@ const RetailerDashboard = () => {
           product.customer, // productId
           product.quantity // toOwnerID
           // Quantity (set to 1 for now, can be changed)            // Location (Source as location)
+        )
+
+        // Update localStorage for the products in DistributerDashboard
+        const savedProducts =
+          JSON.parse(localStorage.getItem('distributerProducts')) || []
+        const updatedProducts = savedProducts.map(p =>
+          p.productId === product.productId
+            ? { ...p, quantity: p.quantity - product.quantity } // Update the quantity
+            : p
+        )
+
+        // Save the updated products back to localStorage
+        localStorage.setItem(
+          'distributerProducts',
+          JSON.stringify(updatedProducts)
         )
 
         // Add the product locally to the UI

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { v4 as uuidv4 } from 'uuid'
 import QrCode from '../common/QrCode'
 import SmartContractService from '../../contracts/smartContract' // Import SmartContractService
@@ -9,7 +9,12 @@ import Footer from './Footer'
 
 const ManufacturerDashboard = () => {
   const [showForm, setShowForm] = useState(false)
-  const [products, setProducts] = useState([])
+  const [products, setProducts] = useState(() => {
+    // Retrieve products from localStorage on initial load
+    const savedProducts = localStorage.getItem('products')
+    return savedProducts ? JSON.parse(savedProducts) : []
+  })
+
   const [qrValue, setqrValue] = useState('')
   const [product, setProduct] = useState({
     productId: '',
@@ -17,7 +22,21 @@ const ManufacturerDashboard = () => {
     quantity: '',
     imageUrl: ''
   })
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(false)
+
+  // Sync products to localStorage whenever they are updated
+  useEffect(() => {
+    localStorage.setItem('products', JSON.stringify(products))
+  }, [products]) // This effect runs every time `products` changes
+
+  // Listen to storage changes (like when the product is transferred)
+  useEffect(() => {
+    window.addEventListener('storage', syncProductsWithLocalStorage)
+
+    return () => {
+      window.removeEventListener('storage', syncProductsWithLocalStorage)
+    }
+  }, [])
 
   // Function to generate a random alphanumeric string of length 7
   const generateRandomString = () => {
@@ -38,8 +57,41 @@ const ManufacturerDashboard = () => {
   }
 
   const addProduct = newProduct => {
-    setProducts([...products, newProduct])
-    console.log(products)
+    const updatedProducts = [...products, newProduct]
+    setProducts(updatedProducts)
+    // localStorage.setItem('products', JSON.stringify(updatedProducts)); // Store updated products in localStorage
+  }
+
+  // Function to update state when localStorage changes
+  const syncProductsWithLocalStorage = () => {
+    const savedProducts = localStorage.getItem('products')
+    if (savedProducts) {
+      setProducts(JSON.parse(savedProducts))
+    }
+  }
+  // Function to handle product update after transaction
+  const updateProductAfterTransaction = updatedProduct => {
+    const updatedProducts = products.map(p =>
+      p.productId === updatedProduct.productId ? updatedProduct : p
+    )
+    setProducts(updatedProducts) // This will trigger localStorage sync
+  }
+
+  // Function to handle product quantity update after transaction
+  const handleTransactionUpdate = async productId => {
+    try {
+      // Fetch updated product data from the smart contract (e.g., quantity changed)
+      const updatedProductFromBlockchain =
+        await SmartContractService.getProduct(productId)
+
+      // Once we have updated data, we update the product in our state
+      updateProductAfterTransaction(updatedProductFromBlockchain)
+
+      toast.success('Product updated successfully after transaction!')
+    } catch (error) {
+      console.error('Error updating product after transaction:', error)
+      // toast.error('Error updating product after transaction.')
+    }
   }
 
   const handleChange = e => {
@@ -49,18 +101,27 @@ const ManufacturerDashboard = () => {
 
   const handleAdd = async e => {
     e.preventDefault()
-console.log("Button clicked");
+    console.log('Button clicked')
 
-    if (product.productId && product.qrCode && product.quantity && product.imageUrl) {
+    if (
+      product.productId &&
+      product.qrCode &&
+      product.quantity &&
+      product.imageUrl
+    ) {
       // Add product to the list
       addProduct({
         id: uuidv4(),
         ...product
       })
 
-      if (!product.productId || !product.qrCode || !product.quantity || !product.imageUrl) {
+      if (
+        !product.productId ||
+        !product.qrCode ||
+        !product.quantity ||
+        !product.imageUrl
+      ) {
         toast.error('Please fill in all fields')
-        
       }
 
       try {
@@ -73,6 +134,9 @@ console.log("Button clicked");
         )
         console.log('Transaction successful:', tx)
 
+        // After the transaction, fetch updated data from the blockchain
+        handleTransactionUpdate(product.productId, product.quantity)
+
         // Reset the form after successful transaction
         setProduct({
           productId: '',
@@ -84,7 +148,7 @@ console.log("Button clicked");
         toast.success('Product Added successfully')
       } catch (error) {
         console.error('Error Adding product:', error)
-        toast.error("Error Adding product")
+        toast.error('Error Adding product')
       }
 
       // Hide the form
@@ -126,8 +190,6 @@ console.log("Button clicked");
                     onChange={handleChange}
                   />
                 </div>
-
-               
 
                 <div className='mb-5'>
                   <label
@@ -228,7 +290,7 @@ console.log("Button clicked");
           })}
         </div>
       </div>
-<Footer />
+      <Footer />
       <ToastContainer
         position='top-right'
         autoClose={3000}

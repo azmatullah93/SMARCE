@@ -4,25 +4,37 @@ import SmartContractService from '../../contracts/smartContract' // Import Smart
 import Navbar from '../common/Navbar'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { useEffect } from 'react'
 import Footer from './Footer'
 const DistributerDashboard = () => {
   const [showForm, setShowForm] = useState(false)
-  const [products, setProducts] = useState([])
+  // Initialize state from localStorage if products exist
+  const [products, setProducts] = useState(() => {
+    const savedProducts = localStorage.getItem('distributerProducts')
+    return savedProducts ? JSON.parse(savedProducts) : []
+  })
   const [product, setProduct] = useState({
     productId: '',
     toOwnerID: '',
     location: '',
     quantity: ''
   })
-  const [toggle, setToggle] = useState(false);
+  const [toggle, setToggle] = useState(false)
 
   const toggleForm = () => {
     setShowForm(!showForm)
   }
 
+  // Sync products to localStorage whenever they are updated
+  useEffect(() => {
+    localStorage.setItem('distributerProducts', JSON.stringify(products))
+  }, [products])
+
+  // Function to add a product locally
   const addProduct = newProduct => {
-    setProducts([...products, newProduct])
-    console.log(products)
+    const updatedProducts = [...products, newProduct]
+    setProducts(updatedProducts) // This will trigger the useEffect to update localStorage
+    console.log('Products after adding: ', updatedProducts)
   }
 
   const handleChange = e => {
@@ -57,6 +69,15 @@ const DistributerDashboard = () => {
           product.quantity, // Quantity (set to 1 for now, can be adjusted)
           product.location // Location (Source as location)
         )
+
+        // Update localStorage with the new product data
+        const savedProducts = JSON.parse(localStorage.getItem('products')) || []
+        const updatedProducts = savedProducts.map(p =>
+          p.productId === product.productId
+            ? { ...p, quantity: p.quantity - product.quantity } // Update the quantity or other fields
+            : p
+        )
+        localStorage.setItem('products', JSON.stringify(updatedProducts))
 
         // Add the product locally to the UI
         addProduct({
