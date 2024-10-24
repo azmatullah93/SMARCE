@@ -5,6 +5,8 @@ import Navbar from '../common/Navbar'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Footer from './Footer'
+import { message } from 'antd'
+
 const RetailerDashboard = () => {
   const [showForm, setShowForm] = useState(false)
 
@@ -99,10 +101,10 @@ const RetailerDashboard = () => {
 
         toggleForm()
 
-        toast.success('Product Sold successfully')
+        message.success('Product Sold successfully')
       } catch (error) {
         console.error('Error selling product:', error.message)
-        toast.error('Error selling product')
+        message.error('Error selling product')
       }
     }
   }

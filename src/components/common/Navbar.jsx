@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import SmartContractService from '../../contracts/smartContract'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { message } from 'antd'
 const Navbar = () => {
   const [isConnected, setIsConnected] = useState(false)
   const [account, setAccount] = useState(null)
@@ -19,14 +20,17 @@ const Navbar = () => {
       setAccount(address)
       setIsConnected(true)
       console.log('Wallet connected successfully')
-      toast.success('Wallet connected successfully')
+      // toast.success('Wallet connected successfully')
+      message.success('Wallet connected successfully')
 
       // Fetch the owner ID
       const fetchedOwnerID = await SmartContractService.getOwnerID(address)
       setOwnerID(fetchedOwnerID) // Directly set the ownerID
     } catch (error) {
       console.error('Error connecting wallet:', error)
-      toast.error('Error connecting wallet')
+      // toast.error('Error connecting wallet')
+      message.error('Error connecting wallet')
+
     }
   }
 
@@ -40,10 +44,10 @@ const Navbar = () => {
       const result = await SmartContractService.signUP()
       console.log('SignUp result:', result)
       setOwnerID(result.toNumber ? result.toNumber() : parseInt(result, 10)) // Convert if necessary
-      toast.success('Sign up successful')
+      message.success('Sign up successful')
     } catch (error) {
       console.error('Error signing up:', error.message)
-      toast.error('Error signing up')
+      message.error('Error signing up')
     }
   }
 

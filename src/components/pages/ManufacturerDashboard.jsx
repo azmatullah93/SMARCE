@@ -6,6 +6,7 @@ import Navbar from '../common/Navbar'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Footer from './Footer'
+import { message } from 'antd'
 
 const ManufacturerDashboard = () => {
   const [showForm, setShowForm] = useState(false)
@@ -87,7 +88,7 @@ const ManufacturerDashboard = () => {
       // Once we have updated data, we update the product in our state
       updateProductAfterTransaction(updatedProductFromBlockchain)
 
-      toast.success('Product updated successfully after transaction!')
+      message.success('Product updated successfully after transaction!')
     } catch (error) {
       console.error('Error updating product after transaction:', error)
       // toast.error('Error updating product after transaction.')
@@ -121,7 +122,7 @@ const ManufacturerDashboard = () => {
         !product.quantity ||
         !product.imageUrl
       ) {
-        toast.error('Please fill in all fields')
+        message.error('Please fill in all fields')
       }
 
       try {
@@ -145,10 +146,10 @@ const ManufacturerDashboard = () => {
           imageUrl: ''
         })
 
-        toast.success('Product Added successfully')
+        message.success('Product Added successfully')
       } catch (error) {
         console.error('Error Adding product:', error)
-        toast.error('Error Adding product')
+        message.error('Error Adding product')
       }
 
       // Hide the form

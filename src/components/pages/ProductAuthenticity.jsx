@@ -5,6 +5,8 @@ import Navbar from '../common/Navbar'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Footer from './Footer'
+import { message } from 'antd'
+
 const ProductAuthenticity = () => {
   const [formData, setFormData] = useState({ ownerID: '' })
   const [isScanning, setIsScanning] = useState(false)

@@ -6,6 +6,8 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { useEffect } from 'react'
 import Footer from './Footer'
+import { message } from 'antd'
+
 const DistributerDashboard = () => {
   const [showForm, setShowForm] = useState(false)
   // Initialize state from localStorage if products exist
@@ -95,10 +97,10 @@ const DistributerDashboard = () => {
 
         toggleForm()
 
-        toast.success('Product transferred successfully')
+        message.success('Product transferred successfully')
       } catch (error) {
         console.error('Error transferring product:', error)
-        toast.error('Error transferring product')
+        message.error('Error transferring product')
       }
     }
   }
